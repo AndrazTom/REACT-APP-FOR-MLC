@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css';
 import Header from './components/Header';
-import Body from './components/Body'
+import BenchmarkDataFilter from './components/BenchmarkDataFilter'
 import { customTheme } from './components/customTemplate';
 import { ThemeProvider } from '@material-ui/core/styles';
 
@@ -11,7 +11,7 @@ class App extends React.Component {
       <React.Fragment>
         <ThemeProvider theme={customTheme()}>
           <Header />
-          <Body />    
+          <BenchmarkDataFilter />    
         </ThemeProvider>
       </React.Fragment>
     );

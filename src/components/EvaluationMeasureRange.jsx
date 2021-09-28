@@ -5,7 +5,7 @@ import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@mui/material';
 
 
-class Eval extends React.Component {
+class EvaluationMeasureRange extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,8 +15,8 @@ class Eval extends React.Component {
     this.handleRangeError= this.handleRangeError.bind(this);
 
     this.state = {
-      SelectedMeasure: "",
-      SelectedRange: "",
+      SelectedMeasure: props.measure,
+      SelectedRange: props.range,
       MeasureError: false,
 			RangeError: false
     }
@@ -53,37 +53,30 @@ class Eval extends React.Component {
 
  
   render() {
-    
     return (
-
       <Grid container spacing = {2}>
         <Grid item>
           <Autocomplete
             multiple = {false}
             limitTags={50}
             options={Measures}
+            value={this.state.SelectedMeasure}
             sx={{width: 300}}
             onChange={this.handleMeasure}
             renderInput={(params) => 
-            <TextField {...params}
-            value={this.state.SelectedMeasure}
-            variant='outlined'
-            label = "Evaluation measure"
-            color='secondary'
-            onChange={this.handleMeasureError}
-            error={
-              this.state.SelectedMeasure==="" &&
-              this.state.SelectedRange!=="" &&
-              !this.state.RangeError
+              <TextField {...params}
+                
+                variant='outlined'
+                label = "Evaluation measure"
+                color='secondary'
+                onChange={this.handleMeasureError}
+                error={this.state.SelectedMeasure==="" && this.state.SelectedRange!=="" && !this.state.RangeError}
+              />
             }
-            //helperText={this.state.MeasureError &&  "Please enter a measure."}
-            />}
 					/>
         </Grid> 
-
         <Grid item>
-        
-        <TextField
+          <TextField
             label='Range'
             color='secondary'
             margin='dense'
@@ -92,12 +85,12 @@ class Eval extends React.Component {
             onChange={this.handleRange}
             error={this.state.RangeError}
             helperText={this.state.RangeError &&  "Please enter a valid range."}
-        />
+          />
 				</Grid>
       </Grid>
     );
    }
  }
   
- export default Eval;
+ export default EvaluationMeasureRange;
  
