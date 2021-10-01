@@ -1,5 +1,5 @@
 import React from 'react';
-import { Datasets, Methods } from './dataOptions';
+import { Datasets, Methods} from './dataOptions';
 import EvaluationMeasureRange from './EvaluationMeasureRange';
 import { Autocomplete } from '@mui/material';
 import { Button, TextField } from '@material-ui/core';
@@ -25,13 +25,13 @@ class Body extends React.Component {
 					"id": 0
 				}
 			],
-			disabledMeasures: [],
-			addButtonDisabled: true
+			addButtonDisabled: true,
+			disabledMeasures: []
     	}
   	}
 
 componentDidMount(){
-		this.setFirstEvaluationHTMLElement()
+		this.setEvaluationHTMLElements()
 	}
 
 	parentHandleMeasure(val, id) {
@@ -46,7 +46,7 @@ componentDidMount(){
 			selectedEvals: newSelectedEvals 
 		})
 		this.setDisabledMeasures()
-		this.addButtonDisabled()
+		this.addButtonDisabled()	
 	}
 
 	parentHandleRange(val, id) {
@@ -63,40 +63,13 @@ componentDidMount(){
 		this.setDisabledMeasures()
 		this.addButtonDisabled()
 	}
-	setFirstEvaluationHTMLElement(){
-		const evals = [];
-		const i=0;
-		evals.push(
-			<EvaluationMeasureRange
-				onHandleMeasureChange={this.parentHandleMeasure}
-				id = {this.state.selectedEvals[i].id}
-				range = {this.state.selectedEvals[i].range}
-				measure = {this.state.selectedEvals[i].measure}
-				disabledMeasures={this.state.disabledMeasures}
-				onHandleRangeChange={this.parentHandleRange}
-			/>
-		)
-		this.setState({
-			evaluationHTMLElements: evals
-		})
-		this.setDisabledMeasures()
-	}
+	
 
 	setEvaluationHTMLElements(){
 		console.log("set HTML")
 		console.log(this.state.selectedEvals)
-		let i=0
-		const evals=[
-			<EvaluationMeasureRange
-			onHandleMeasureChange={this.parentHandleMeasure}
-			id = {this.state.selectedEvals[i].id}
-			range = {this.state.selectedEvals[i].range}
-			measure = {this.state.selectedEvals[i].measure}
-			disabledMeasures={this.state.disabledMeasures}
-			onHandleRangeChange={this.parentHandleRange}
-			/>
-		]
-		for(let i = 1; i<this.state.selectedEvals.length; i++){
+		const evals=[]
+		for(let i = 0; i<this.state.selectedEvals.length; i++){
 			evals.push(
 				<Grid container spacing = {2}>
 					<Grid item>
@@ -105,8 +78,8 @@ componentDidMount(){
 							id = {this.state.selectedEvals[i].id}
 							range = {this.state.selectedEvals[i].range}
 							measure = {this.state.selectedEvals[i].measure}
-							disabledMeasures={this.state.disabledMeasures}
 							onHandleRangeChange={this.parentHandleRange}
+							disabledMeasures={this.state.disabledMeasures}
 						/>
 					</Grid>
 					<Grid item>
@@ -114,6 +87,7 @@ componentDidMount(){
 							variant='contained'
 							color='secondary'
 							onClick={() => this.handleRemove(this.state.selectedEvals[i].id)}
+							disabled={this.state.selectedEvals.length === 1}
 						>
 							<DeleteIcon/>
 						</Button>
@@ -124,6 +98,7 @@ componentDidMount(){
 		this.setState({
 			evaluationHTMLElements: evals
 		})
+		console.log(evals)
 		this.setDisabledMeasures()
 	}
 
@@ -131,8 +106,8 @@ componentDidMount(){
 		const newDisabledMeasures = []
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
 			newDisabledMeasures.push(this.state.selectedEvals[i].measure)
-			this.setState({disabledMeasures: newDisabledMeasures})
 		}
+		this.setState({disabledMeasures: newDisabledMeasures})
 	}
 
 	addButtonDisabled(){
@@ -140,8 +115,9 @@ componentDidMount(){
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
 			if(this.state.selectedEvals[i].measure===null ||
 				this.state.selectedEvals[i].measure==='' ||
-				 this.state.selectedEvals[i].range==='' ||
-				 !regex.test(this.state.selectedEvals[i].range)){
+				this.state.selectedEvals.length>10 ||
+				this.state.selectedEvals[i].range==='' ||
+				!regex.test(this.state.selectedEvals[i].range)){
 				this.setState({addButtonDisabled: true})
 			}
 			else{
@@ -149,23 +125,13 @@ componentDidMount(){
 			}
 		}
 	}
-
 	handleAdd() {
 		let newSelectedEvals = this.state.selectedEvals
-		if(newSelectedEvals.length===0){
-			newSelectedEvals.push({
-				"measure": "",
-				"range": "",
-				"id": 0
-			})
-		}
-		else{
 			newSelectedEvals.push({
 				"measure": "",
 				"range": "",
 				"id": this.state.selectedEvals[this.state.selectedEvals.length-1].id+1
 			})
-		}
 
 		this.setState({
 			selectedEvals: newSelectedEvals,
@@ -175,6 +141,8 @@ componentDidMount(){
 			console.log("handle add")
 			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
+			this.addButtonDisabled()
+			this.setDisabledMeasures()
 		})
 		
 	}
@@ -193,8 +161,8 @@ componentDidMount(){
 			console.log("handle remove")
 			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
-			this.setDisabledMeasures()
 			this.addButtonDisabled()
+			this.setDisabledMeasures()
 		})
 	}
 

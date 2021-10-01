@@ -1,12 +1,11 @@
 import React from 'react';
-import { Measures } from './dataOptions';
 import { Grid } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@mui/material';
+import { Measures } from './dataOptions'
 
 
 class EvaluationMeasureRange extends React.Component {
-
   constructor(props) {
     super(props);
     this.handleMeasure = this.handleMeasure.bind(this);
@@ -20,6 +19,17 @@ class EvaluationMeasureRange extends React.Component {
       MeasureError: false,
 			RangeError: false,
       disabledMeasures: props.disabledMeasures
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps!== this.props){
+    console.log("updated")
+    this.setState({
+      SelectedMeasure: this.props.measure,
+      SelectedRange: this.props.range,
+      disabledMeasures: this.props.disabledMeasures,
+    })
     }
   }
 
@@ -67,7 +77,6 @@ class EvaluationMeasureRange extends React.Component {
             onChange={this.handleMeasure}
             renderInput={(params) => 
               <TextField {...params}
-                
                 variant='outlined'
                 label = "Evaluation measure"
                 color='secondary'
