@@ -18,7 +18,7 @@ class Body extends React.Component {
 
 		this.state = {
 			evaluationHTMLElements: [],
-      selectedEvals: [
+      		selectedEvals: [
 				{
 					"measure": "",
 					"range": "",
@@ -30,7 +30,7 @@ class Body extends React.Component {
     	}
   	}
 
-componentDidMount(){
+	componentDidMount(){
 		this.setEvaluationHTMLElements()
 	}
 
@@ -66,8 +66,6 @@ componentDidMount(){
 	
 
 	setEvaluationHTMLElements(){
-		console.log("set HTML")
-		console.log(this.state.selectedEvals)
 		const evals=[]
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
 			evals.push(
@@ -98,8 +96,6 @@ componentDidMount(){
 		this.setState({
 			evaluationHTMLElements: evals
 		})
-		console.log(evals)
-		this.setDisabledMeasures()
 	}
 
 	setDisabledMeasures(){
@@ -127,42 +123,43 @@ componentDidMount(){
 	}
 	handleAdd() {
 		let newSelectedEvals = this.state.selectedEvals
-			newSelectedEvals.push({
-				"measure": "",
-				"range": "",
-				"id": this.state.selectedEvals[this.state.selectedEvals.length-1].id+1
-			})
+		let newDisabledMeasures = []
+		newSelectedEvals.push({
+			"measure": "",
+			"range": "",
+			"id": this.state.selectedEvals[this.state.selectedEvals.length-1].id + 1
+		})
+
+		newSelectedEvals.forEach(el =>{newDisabledMeasures.push(el.measure)})
 
 		this.setState({
 			selectedEvals: newSelectedEvals,
-			addButtonDisabled: true
+			addButtonDisabled: true,
+			disabledMeasures: newDisabledMeasures
 		}, 
 		()=>{
-			console.log("handle add")
-			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
 			this.addButtonDisabled()
-			this.setDisabledMeasures()
 		})
-		
 	}
 
 	handleRemove(x) {
-		console.log("handle remove "+x)
+		let newDisabledMeasures = []
 		let newSelectedEvals = []
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
-			if(this.state.selectedEvals[i].id!==x)
+			if(this.state.selectedEvals[i].id!==x){
 				newSelectedEvals.push(this.state.selectedEvals[i])
+				newDisabledMeasures.push(this.state.selectedEvals[i].measure)
+			}
+				
 		}
 		this.setState({
-			selectedEvals: newSelectedEvals
+			selectedEvals: newSelectedEvals, 
+			disabledMeasures: newDisabledMeasures
 		}, 
 		()=>{
-			console.log("handle remove")
-			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
 			this.addButtonDisabled()
-			this.setDisabledMeasures()
 		})
 	}
 

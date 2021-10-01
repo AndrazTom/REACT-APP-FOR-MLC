@@ -8,60 +8,41 @@ import { Measures } from './dataOptions'
 class EvaluationMeasureRange extends React.Component {
   constructor(props) {
     super(props);
-    this.handleMeasure = this.handleMeasure.bind(this);
-    this.handleRange = this.handleRange.bind(this);
-    this.handleMeasureError= this.handleMeasureError.bind(this);
-    this.handleRangeError= this.handleRangeError.bind(this);
-
     this.state = {
-      SelectedMeasure: props.measure,
-      SelectedRange: props.range,
-      MeasureError: false,
-			RangeError: false,
+      selectedMeasure: props.measure,
+      selectedRange: props.range,
+			rangeError: false,
       disabledMeasures: props.disabledMeasures
     }
   }
 
   componentDidUpdate(prevProps){
     if(prevProps!== this.props){
-    console.log("updated")
-    this.setState({
-      SelectedMeasure: this.props.measure,
-      SelectedRange: this.props.range,
-      disabledMeasures: this.props.disabledMeasures,
-    })
+      this.setState({
+        selectedMeasure: this.props.measure,
+        selectedRange: this.props.range,
+        disabledMeasures: this.props.disabledMeasures,
+      })
     }
   }
 
-	handleMeasure(e, v) {
-    this.setState({
-      SelectedMeasure: v,
-    }, ()=>console.log(v+'eval'+this.state.SelectedMeasure+this.state.disabledMeasures))
+	handleMeasure = (e, v) => {
+    this.setState({selectedMeasure: v})
     this.props.onHandleMeasureChange(v, this.props.id);
 	}
 
-  handleRange(e) {
-    this.setState({
-      SelectedRange: e.target.value
-    }, ()=>{this.handleRangeError()})
+  handleRange = (e) => {
+    this.setState({selectedRange: e.target.value}, ()=>{this.handleRangeError()})
     this.props.onHandleRangeChange(e.target.value, this.props.id);
 	}
-	
-  handleMeasureError() {
-      if (this.state.SelectedMeasure)
-        this.setState({ MeasureError: false })
-      else
-        this.setState({ MeasureError: true })
-  }
 
-  handleRangeError() {
+  handleRangeError = () => {
     const regex = new RegExp(/^(\d+(\.\d)?\d*(-\d+(\.\d)?\d*)?|[><]=?\d+(\.\d)?\d*)$/)
-    if ( this.state.SelectedRange === '' || regex.test(this.state.SelectedRange))
-      this.setState({ RangeError: false })
+    if ( this.state.selectedRange === '' || regex.test(this.state.selectedRange))
+      this.setState({ rangeError: false })
     else
-      this.setState({ RangeError: true })
+      this.setState({ rangeError: true })
   }
-
  
   render() {
     return (
@@ -72,7 +53,7 @@ class EvaluationMeasureRange extends React.Component {
             limitTags={50}
             options={Measures}
             getOptionDisabled={(option) => !!this.state.disabledMeasures.find(element => element === option)}
-            value={this.state.SelectedMeasure}
+            value={this.state.selectedMeasure}
             sx={{width: 300}}
             onChange={this.handleMeasure}
             renderInput={(params) => 
@@ -80,8 +61,7 @@ class EvaluationMeasureRange extends React.Component {
                 variant='outlined'
                 label = "Evaluation measure"
                 color='secondary'
-                onChange={this.handleMeasureError}
-                error={this.state.SelectedMeasure==="" && this.state.SelectedRange!=="" && !this.state.RangeError}
+                error={this.state.selectedMeasure==="" && this.state.selectedRange!=="" && !this.state.rangeError}
               />
             }
 					/>
@@ -92,16 +72,15 @@ class EvaluationMeasureRange extends React.Component {
             color='secondary'
             margin='dense'
             variant='outlined'
-            value={this.state.SelectedRange}
+            value={this.state.selectedRange}
             onChange={this.handleRange}
-            error={this.state.RangeError}
-            helperText={this.state.RangeError &&  "Please enter a valid range."}
+            error={this.state.rangeError}
+            helperText={this.state.rangeError &&  "Please enter a valid range."}
           />
 				</Grid>
       </Grid>
     );
    }
  }
-  
  export default EvaluationMeasureRange;
  
