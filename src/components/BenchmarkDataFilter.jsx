@@ -18,7 +18,7 @@ class Body extends React.Component {
 
 		this.state = {
 			evaluationHTMLElements: [],
-      		selectedEvals: [
+      selectedEvals: [
 				{
 					"measure": "",
 					"range": "",
@@ -30,7 +30,7 @@ class Body extends React.Component {
     	}
   	}
 
-	componentDidMount(){
+componentDidMount(){
 		this.setEvaluationHTMLElements()
 	}
 
@@ -66,6 +66,8 @@ class Body extends React.Component {
 	
 
 	setEvaluationHTMLElements(){
+		console.log("set HTML")
+		console.log(this.state.selectedEvals)
 		const evals=[]
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
 			evals.push(
@@ -96,6 +98,8 @@ class Body extends React.Component {
 		this.setState({
 			evaluationHTMLElements: evals
 		})
+		console.log(evals)
+		this.setDisabledMeasures()
 	}
 
 	setDisabledMeasures(){
@@ -123,43 +127,42 @@ class Body extends React.Component {
 	}
 	handleAdd() {
 		let newSelectedEvals = this.state.selectedEvals
-		let newDisabledMeasures = []
-		newSelectedEvals.push({
-			"measure": "",
-			"range": "",
-			"id": this.state.selectedEvals[this.state.selectedEvals.length-1].id + 1
-		})
-
-		newSelectedEvals.forEach(el =>{newDisabledMeasures.push(el.measure)})
+			newSelectedEvals.push({
+				"measure": "",
+				"range": "",
+				"id": this.state.selectedEvals[this.state.selectedEvals.length-1].id+1
+			})
 
 		this.setState({
 			selectedEvals: newSelectedEvals,
-			addButtonDisabled: true,
-			disabledMeasures: newDisabledMeasures
+			addButtonDisabled: true
 		}, 
 		()=>{
+			console.log("handle add")
+			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
 			this.addButtonDisabled()
+			this.setDisabledMeasures()
 		})
+		
 	}
 
 	handleRemove(x) {
-		let newDisabledMeasures = []
+		console.log("handle remove "+x)
 		let newSelectedEvals = []
 		for(let i = 0; i<this.state.selectedEvals.length; i++){
-			if(this.state.selectedEvals[i].id!==x){
+			if(this.state.selectedEvals[i].id!==x)
 				newSelectedEvals.push(this.state.selectedEvals[i])
-				newDisabledMeasures.push(this.state.selectedEvals[i].measure)
-			}
-				
 		}
 		this.setState({
-			selectedEvals: newSelectedEvals, 
-			disabledMeasures: newDisabledMeasures
+			selectedEvals: newSelectedEvals
 		}, 
 		()=>{
+			console.log("handle remove")
+			console.log(this.state.selectedEvals)
 			this.setEvaluationHTMLElements()
 			this.addButtonDisabled()
+			this.setDisabledMeasures()
 		})
 	}
 
@@ -200,6 +203,15 @@ class Body extends React.Component {
 				disabled={this.state.addButtonDisabled}
 				>
 					<AddIcon />
+				</Button>
+				<Button
+				color='secondary'
+				variant='contained'
+				size='large'
+				onClick={this.handleSubmit}
+				disabled={this.state.addButtonDisabled}
+				>
+					Submit
 				</Button>
 			</React.Fragment>
 		);
